@@ -1,26 +1,51 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import * as React from "react";
+import {
+  Action,
+  CountProvider,
+  useCountState,
+  useCountDispatch
+} from "./app-context";
+
+function CountDisplay() {
+  const { count } = useCountState();
+
+  const [renderizou, setRenderizou] = React.useState(0);
+
+  function handleRenderizou() {
+    setRenderizou(renderizou + 1);
+  }
+
+  React.useEffect(handleRenderizou, [count]);
+
+  return (
+    <>
+      <div>{`The current count is ${count}`}</div>
+      <div>Renderizou {renderizou} vezes</div>
+    </>
+  );
+}
+
+function Counter() {
+  const dispatch = useCountDispatch();
+
+  return (
+    <>
+      <button onClick={() => dispatch(Action.increment)}>
+        Increment count
+      </button>
+    </>
+  );
+}
 
 const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <CountProvider>
+        <CountDisplay />
+        <Counter />
+      </CountProvider>
+    </>
   );
-}
+};
 
 export default App;
